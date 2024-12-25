@@ -8,7 +8,7 @@ defusedxml==0.7.1
 dj-database-url==0.5.0
 dj-rest-auth==2.1.9
 Django==5.1.4
-django-allauth==0.43.0
+django-allauth==0.44.0
 django-cloudinary-storage==0.3.0
 django-cors-headers==4.6.0
 django-filter==24.3
@@ -29,6 +29,6 @@ six==1.17.0
 sqlparse==0.5.3
 typing_extensions==4.12.2
 urllib3==2.3.0
-setuptools>=65.0.0
+setuptools>=70.0.0
 pip>=24.3.1
 wheel
