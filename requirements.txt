@@ -31,4 +31,4 @@ typing_extensions==4.12.2
 urllib3==2.3.0
 setuptools>=65.0.0
 pip>=24.3.1
-wheel>=0.40.0
+wheel
