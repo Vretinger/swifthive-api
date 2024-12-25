@@ -6,7 +6,9 @@ tasks:
       # Install pyenv and Python 3.10.12
       curl https://pyenv.run | bash
       export PATH="$HOME/.pyenv/bin:$PATH"
+      export PYENV_ROOT="$HOME/.pyenv"
       eval "$(pyenv init --path)"
+      eval "$(pyenv init -)"
       pyenv install 3.10.12
       pyenv global 3.10.12
       # Start PostgreSQL
