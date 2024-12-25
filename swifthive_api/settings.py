@@ -29,8 +29,16 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication'
         if 'DEV' in os.environ
         else 'dj_rest_auth.jwt_auth.JWTCookieAuthentication'
-    )]
+    )],
+    'DEFAULT_PAGINATION_CLASS':
+        'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'DATETIME_FORMAT': '%d %b %Y',
 }
+if 'DEV' not in os.environ:
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
+        'rest_framework.renderers.JSONRenderer',
+    ]
 
 REST_USE_JWT = True
 JWT_AUTH_SECURE = True
@@ -50,7 +58,7 @@ SECRET_KEY = 'django-insecure-(_91@n%bc%q+er&jsw(j8x79pe%72llh9bs_nzpirc7pvj=c%3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['8000-vretinger-swifthiveapi-x9ii546ci42.ws.codeinstitute-ide.net']
+ALLOWED_HOSTS = ['8000-vretinger-swifthiveapi-9zysld3smus.ws.codeinstitute-ide.net']
 
 
 # Application definition
@@ -121,11 +129,6 @@ DATABASES = {
     }
 }
 
-REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend',
-    ]
-}
 
 
 # Password validation
