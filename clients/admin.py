@@ -1,7 +1,12 @@
 # clients/admin.py
 from django.contrib import admin
-from .models import Company, Client, Listing
+from .models import Company, Client
 
-admin.site.register(Company)
-admin.site.register(Client)
-admin.site.register(Listing)
+class ClientAdmin(admin.ModelAdmin):
+    list_display = ['name', 'email', 'created_at']  # Include is_active and created_at
+
+class CompanyAdmin(admin.ModelAdmin):
+    list_display = ['name']  # Include is_active and created_at
+
+admin.site.register(Client, ClientAdmin)
+admin.site.register(Company, CompanyAdmin)

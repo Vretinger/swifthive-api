@@ -52,6 +52,7 @@ INSTALLED_APPS = [
 
     'freelancers',
     'clients',
+    'job_listings',
 ]
 
 MIDDLEWARE = [
