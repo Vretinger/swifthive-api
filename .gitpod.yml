@@ -1,9 +1,23 @@
 image:
   file: .gitpod.dockerfile
+
 tasks:
-  - init: . ${GITPOD_REPO_ROOT}/.vscode/init_tasks.sh
-    command: /home/gitpod/.pg_ctl/bin/pg_start > /dev/null
-  - command: . ${GITPOD_REPO_ROOT}/.vscode/uptime.sh &
+  - init: |
+      # Install pyenv and Python 3.10.12
+      curl https://pyenv.run | bash
+      export PATH="$HOME/.pyenv/bin:$PATH"
+      eval "$(pyenv init --path)"
+      pyenv install 3.10.12
+      pyenv global 3.10.12
+      # Start PostgreSQL
+      . ${GITPOD_REPO_ROOT}/.vscode/init_tasks.sh
+    command: |
+      # Ensure Python 3.10 is being used
+      python --version
+      /home/gitpod/.pg_ctl/bin/pg_start > /dev/null
+  - command: |
+      . ${GITPOD_REPO_ROOT}/.vscode/uptime.sh &
+
 vscode:
   extensions:
     - ms-python.python
