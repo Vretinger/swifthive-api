@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import re
 import os
 import dj_database_url
 
@@ -67,7 +68,10 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'DEV' in os.environ
 
-ALLOWED_HOSTS = ['8000-vretinger-swifthiveapi-9zysld3smus.ws.codeinstitute-ide.net', 'localhost', 'swifthive-api.herokuapp.com']
+ALLOWED_HOSTS = [
+    os.environ.get('ALLOWED_HOST'),
+    'localhost',
+]
 
 
 # Application definition
@@ -113,10 +117,11 @@ if 'CLIENT_ORIGIN' in os.environ:
      CORS_ALLOWED_ORIGINS = [
          os.environ.get('CLIENT_ORIGIN')
      ]
-else:
-     CORS_ALLOWED_ORIGIN_REGEXES = [
+     
+if 'CLIENT_ORIGIN_DEV' in os.environ:
+    CORS_ALLOWED_ORIGIN_REGEXES = [
          r"^https:\/\/.*\.codeinstitute-ide\.net$",
-     ]
+    ]
 
 CORS_ALLOW_CREDENTIALS = True
 
