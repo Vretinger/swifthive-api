@@ -125,6 +125,10 @@ if 'CLIENT_ORIGIN_DEV' in os.environ:
 
 CORS_ALLOW_CREDENTIALS = True
 
+AUTHENTICATION_BACKENDS = (
+    'allauth.account.auth_backends.AuthenticationBackend'
+)
+
 ROOT_URLCONF = 'swifthive_api.urls'
 
 TEMPLATES = [
