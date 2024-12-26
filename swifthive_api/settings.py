@@ -126,8 +126,10 @@ if 'CLIENT_ORIGIN_DEV' in os.environ:
 CORS_ALLOW_CREDENTIALS = True
 
 AUTHENTICATION_BACKENDS = (
-    'allauth.account.auth_backends.AuthenticationBackend'
+    'allauth.account.auth_backends.AuthenticationBackend',  # Allauth backend
+    'django.contrib.auth.backends.ModelBackend',  # Default Django backend (for login with email or username)
 )
+
 
 ROOT_URLCONF = 'swifthive_api.urls'
 
