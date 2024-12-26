@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import login
-from freelancer.models import Freelancer
-from client.models import Client
+from freelancers.models import Freelancer
+from clients.models import Client
 from .forms import CustomUserSignupForm
 
 def signup_view(request):
