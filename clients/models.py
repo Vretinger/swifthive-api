@@ -39,3 +39,10 @@ class Listing(models.Model):
     
     def __str__(self):
         return self.title
+
+
+def create_client(sender, instance, created, **kwargs):
+    if created:
+        Client.objects.create(user=instance)
+
+post_save.connect(create_client, sender=User)
