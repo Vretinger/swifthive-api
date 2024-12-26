@@ -126,7 +126,7 @@ if 'CLIENT_ORIGIN_DEV' in os.environ:
 CORS_ALLOW_CREDENTIALS = True
 
 AUTHENTICATION_BACKENDS = (
-    'swifthive_api.authentication_backends.EmailAuthenticationBackend' # Use custom backend
+    'swifthive_api.authentication_backends.EmailAuthenticationBackend',  # Use custom backend
     'django.contrib.auth.backends.ModelBackend',  # Default Django backend (for login with email or username)
 )
 
