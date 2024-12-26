@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.contrib.auth.models import User
-from client.models import Company  # Import the Company model from the client app
+from clients.models import Company  # Import the Company model from the client app
 
 class CustomUserSignupForm(UserCreationForm):
     ROLE_CHOICES = [
