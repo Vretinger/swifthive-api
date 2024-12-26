@@ -100,6 +100,7 @@ INSTALLED_APPS = [
     'freelancers',
     'clients',
     'job_listings',
+    'accounts',
 ]
 SITE_ID = 1
 MIDDLEWARE = [
