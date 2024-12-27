@@ -1,6 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
-
+from django.conf import settings  # Use settings.AUTH_USER_MODEL
 
 # Company Model
 class Company(models.Model):
@@ -15,7 +14,7 @@ class Company(models.Model):
 
 # Client Model
 class Client(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # Use custom user model
     name = models.CharField(max_length=255)
     company = models.ForeignKey(Company, related_name='clients', on_delete=models.CASCADE)
     job_title = models.CharField(max_length=255, blank=True, null=True)
@@ -25,7 +24,7 @@ class Client(models.Model):
     profile_picture = models.ImageField(upload_to='client_pics/', blank=True, null=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.company.name}"
+        return f"{self.user.email} - {self.company.name}"  # Use email for clarity
 
 
 # Listing Model
