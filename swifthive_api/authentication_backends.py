@@ -1,31 +1,29 @@
 from django.contrib.auth.backends import BaseBackend
-from django.contrib.auth.models import User
+from .models import CustomUser 
 from freelancers.models import Freelancer
 from clients.models import Client
 
 class EmailAuthenticationBackend(BaseBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
         # Try to authenticate with email for both Freelancers and Clients
-
         try:
-            # First, check if the user is a Freelancer
-            user = User.objects.get(email=username)
+            # Check if the user exists by email in the CustomUser model
+            user = CustomUser.objects.get(email=username)
             
-            # If user exists, authenticate with the password
+            # If the user exists, check the password
             if user.check_password(password):
-                # You can check if the user is a Freelancer or Client, or just return the User object
+                # Return the user if they exist as a Freelancer or Client
                 if hasattr(user, 'freelancer'):
                     return user
                 if hasattr(user, 'client'):
                     return user
-
-        except User.DoesNotExist:
+        except CustomUser.DoesNotExist:
             return None
         
         return None  # Authentication failed
 
     def get_user(self, user_id):
         try:
-            return User.objects.get(pk=user_id)
-        except User.DoesNotExist:
+            return CustomUser.objects.get(pk=user_id)
+        except CustomUser.DoesNotExist:
             return None
