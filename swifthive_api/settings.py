@@ -37,17 +37,20 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     'DATETIME_FORMAT': '%d %b %Y',
 }
+
 if 'DEV' in os.environ:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+     DATABASES = {
+         'default': {
+             'ENGINE': 'django.db.backends.sqlite3',
+             'NAME': BASE_DIR / 'db.sqlite3',
+         }
+     }
 else:
     DATABASES = {
         'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
     }
+    print("Connect")
+    
 
 REST_USE_JWT = True
 JWT_AUTH_SECURE = True
@@ -110,6 +113,7 @@ INSTALLED_APPS = [
 ]
 SITE_ID = 1
 MIDDLEWARE = [
+    'allauth.account.middleware.AccountMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
