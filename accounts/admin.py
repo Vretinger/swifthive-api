@@ -1,8 +1,24 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+from .forms import CustomUserSignupForm
 from .models import CustomUser
 
-@admin.register(CustomUser)
-class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email', 'role', 'company', 'is_staff')
-    list_filter = ('role', 'is_staff', 'is_superuser')
-    search_fields = ('username', 'email')
+class CustomUserAdmin(UserAdmin):
+    add_form = CustomUserSignupForm
+    model = CustomUser
+    list_display = ('email', 'first_name', 'surname', 'role', 'is_staff', 'is_active')
+    list_filter = ('role', 'is_staff', 'is_active')
+    fieldsets = (
+        (None, {'fields': ('email', 'password', 'first_name', 'surname', 'role')}),
+        ('Permissions', {'fields': ('is_staff', 'is_active', 'groups', 'user_permissions')}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'password1', 'password2', 'first_name', 'surname', 'role', 'company', 'is_staff', 'is_active')}
+        ),
+    )
+    search_fields = ('email',)
+    ordering = ('email',)
+
+admin.site.register(CustomUser, CustomUserAdmin)
