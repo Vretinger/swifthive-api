@@ -10,7 +10,7 @@ class CustomUser(AbstractUser):
     
     email = models.EmailField(_('email address'), unique=True)
     first_name = models.CharField(_('first name'), max_length=30)
-    surname = models.CharField(_('surname'), max_length=30)
+    surname = models.CharField(max_length=30, verbose_name="surname")
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='freelancer')
     company = models.CharField(max_length=255, blank=True, null=True)
 
