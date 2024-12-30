@@ -10,12 +10,12 @@ class CustomUser(AbstractUser):
     
     email = models.EmailField(_('email address'), unique=True)
     first_name = models.CharField(_('first name'), max_length=30)
-    surname = models.CharField(max_length=30, verbose_name="surname")
+    last_name = models.CharField(max_length=30, verbose_name="last_name")
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='freelancer')
     company = models.CharField(max_length=255, blank=True, null=True)
 
     USERNAME_FIELD = 'email'  # Use email for login
-    REQUIRED_FIELDS = ['first_name', 'surname', 'role']  # Add role to required fields
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'role']  # Add role to required fields
     
     def save(self, *args, **kwargs):
         if self.role == 'client' and not self.company:
@@ -23,4 +23,4 @@ class CustomUser(AbstractUser):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.first_name} {self.surname} ({self.email})"
+        return f"{self.first_name} {self.last_name} ({self.email})"
