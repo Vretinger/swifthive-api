@@ -1,5 +1,5 @@
 from dj_rest_auth.serializers import UserDetailsSerializer
-from .models import CustomUser
+from accounts.models import CustomUser
 
 
 class CustomUserDetailsSerializer(UserDetailsSerializer):
