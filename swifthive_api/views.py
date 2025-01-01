@@ -1,10 +1,15 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from dj_rest_auth.views import UserDetailsView
+from .serializers import CustomUserDetailsSerializer
 from .settings import (
     JWT_AUTH_COOKIE, JWT_AUTH_REFRESH_COOKIE, JWT_AUTH_SAMESITE,
     JWT_AUTH_SECURE,
 )
 
+
+class CustomUserDetailsView(UserDetailsView):
+    serializer_class = CustomUserDetailsSerializer
 
 @api_view()
 def root_route(request):
