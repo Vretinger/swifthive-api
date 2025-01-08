@@ -1,22 +1,49 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-class CustomUser(AbstractUser):
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        """
+        Create and return a regular user with an email.
+        """
+        if not email:
+            raise ValueError("The Email field must be set")
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        """
+        Create and return a superuser with an email.
+        """
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+
+        return self.create_user(email, password, **extra_fields)
+
+
+class CustomUser(AbstractBaseUser):
     ROLE_CHOICES = [
         ('freelancer', 'Freelancer'),
         ('client', 'Client'),
     ]
-    
+
     email = models.EmailField(_('email address'), unique=True)
     first_name = models.CharField(_('first name'), max_length=30)
-    last_name = models.CharField(max_length=30, verbose_name="last_name")
+    last_name = models.CharField(_('last name'), max_length=30)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='freelancer')
     company = models.CharField(max_length=255, blank=True, null=True)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
-    USERNAME_FIELD = 'email'  # Use email for login
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'role']  # Add role to required fields
-    
+    objects = CustomUserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['email', 'first_name', 'last_name', 'role']  # Add role to required fields
+
     def save(self, *args, **kwargs):
         if self.role == 'client' and not self.company:
             raise ValueError("Company is required for clients.")

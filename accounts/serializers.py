@@ -3,6 +3,7 @@ from rest_framework import serializers
 from .models import CustomUser
 
 class CustomRegisterSerializer(RegisterSerializer):
+    username = None  # Disable the 'username' field
     email = serializers.EmailField(required=True)
     first_name = serializers.CharField(max_length=30, required=True)
     last_name = serializers.CharField(max_length=30, required=True)
@@ -18,12 +19,15 @@ class CustomRegisterSerializer(RegisterSerializer):
         return data
 
     def save(self, request):
-        user = super().save(request)
-        user.first_name = self.validated_data.get('first_name', '')
-        user.last_name = self.validated_data.get('last_name', '')
-        user.email = self.validated_data.get('email')
-        user.role = self.validated_data.get('role')
-        user.company = self.validated_data.get('company', '')
+        # Collect the user data from the validated data and save the user
+        user = CustomUser.objects.create(
+            email=self.validated_data['email'],
+            first_name=self.validated_data['first_name'],
+            last_name=self.validated_data['last_name'],
+            role=self.validated_data['role'],
+            company=self.validated_data.get('company', ''),
+        )
+        user.set_password(self.validated_data['password1'])  # Set password
         user.save()
         return user
 
