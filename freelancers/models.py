@@ -8,32 +8,34 @@ class Freelancer(models.Model):
         ('On Leave', 'On Leave'),
     ]
 
-    owner = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='freelancer_profile')  # Use custom user model
-    bio = models.TextField(blank=True, null=True)  # Freelancer's short bio
-    skills = models.ManyToManyField('Skill', blank=True)  # Reference to skills model
-    experience = models.TextField(blank=True, null=True)  # Freelance experience
-    portfolio_link = models.URLField(blank=True, null=True)  # Link to portfolio
-    hourly_rate = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)  # Freelancer's hourly rate
-    location = models.CharField(max_length=255, blank=True, null=True)  # Freelancer's location
+    owner = models.OneToOneField(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE, 
+        related_name='freelancer_profile'
+    )
+    bio = models.TextField(blank=True, null=True)
+    skills = models.ManyToManyField('Skill', blank=True)
+    experience = models.TextField(blank=True, null=True)
+    portfolio_link = models.URLField(blank=True, null=True)
+    hourly_rate = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    location = models.CharField(max_length=255, blank=True, null=True)
     availability_status = models.CharField(
-        max_length=20,
-        choices=AVAILABILITY_CHOICES,
-        default='Available'
+        max_length=20, choices=AVAILABILITY_CHOICES, default='Available'
     )
     profile_picture = models.ImageField(
-        upload_to='freelancer_pics/',
-        default='../default_profile_rnezic'  # Update this default path if needed
-    )  # Profile picture
-    created_at = models.DateTimeField(auto_now_add=True)  # Profile creation timestamp
-    updated_at = models.DateTimeField(auto_now=True)  # Profile update timestamp
+        upload_to='freelancer_pics/', 
+        default='default_profile.png'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.owner.email}'s Profile"  # Use email for better compatibility
+        return f"{self.owner.email}'s Profile"
 
 
 class Skill(models.Model):
-    name = models.CharField(max_length=255, unique=True)  # Name of the skill
-    description = models.TextField(blank=True, null=True)  # Description of the skill (optional)
+    name = models.CharField(max_length=255, unique=True)
+    description = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name
