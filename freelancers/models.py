@@ -8,7 +8,7 @@ class Freelancer(models.Model):
         ('On Leave', 'On Leave'),
     ]
 
-    owner = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # Use custom user model
+    owner = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='freelancer_profile')  # Use custom user model
     bio = models.TextField(blank=True, null=True)  # Freelancer's short bio
     skills = models.ManyToManyField('Skill', blank=True)  # Reference to skills model
     experience = models.TextField(blank=True, null=True)  # Freelance experience

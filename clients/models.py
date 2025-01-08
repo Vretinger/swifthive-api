@@ -14,9 +14,9 @@ class Company(models.Model):
 
 # Client Model
 class Client(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # Use custom user model
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='client_profile')  # Use custom user model
     name = models.CharField(max_length=255)
-    company = models.ForeignKey(Company, related_name='clients', on_delete=models.CASCADE)
+    company = models.CharField(max_length=255)
     job_title = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     phone_number = models.CharField(max_length=20)
