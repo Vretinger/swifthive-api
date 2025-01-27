@@ -68,6 +68,10 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 DJ_AUTH_USER_DETAILS_SERIALIZER = 'swifthive_api.serializers.CustomUserDetailsSerializer'
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_USERNAME_REQUIRED = False
 
 
 # Quick-start development settings - unsuitable for production

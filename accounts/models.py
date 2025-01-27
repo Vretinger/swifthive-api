@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -25,15 +25,13 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 
-class CustomUser(AbstractBaseUser):
+class CustomUser(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = [
         ('freelancer', 'Freelancer'),
         ('client', 'Client'),
     ]
 
     email = models.EmailField(_('email address'), unique=True)
-    first_name = models.CharField(_('first name'), max_length=30)
-    last_name = models.CharField(_('last name'), max_length=30)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='freelancer')
     company = models.CharField(max_length=255, blank=True, null=True)
     is_staff = models.BooleanField(default=False)
@@ -42,7 +40,7 @@ class CustomUser(AbstractBaseUser):
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['email', 'first_name', 'last_name', 'role']  # Add role to required fields
+    REQUIRED_FIELDS = ['role']  # Add role to required fields
 
     def save(self, *args, **kwargs):
         if self.role == 'client' and not self.company:
