@@ -5,8 +5,6 @@ from .models import CustomUser
 class CustomRegisterSerializer(RegisterSerializer):
     username = None  # Disable the 'username' field
     email = serializers.EmailField(required=True)
-    first_name = serializers.CharField(max_length=30, required=True)
-    last_name = serializers.CharField(max_length=30, required=True)
     role = serializers.ChoiceField(choices=CustomUser.ROLE_CHOICES, required=True)
     company = serializers.CharField(max_length=255, allow_blank=True, required=False)
 
@@ -22,8 +20,6 @@ class CustomRegisterSerializer(RegisterSerializer):
         # Collect the user data from the validated data and save the user
         user = CustomUser.objects.create(
             email=self.validated_data['email'],
-            first_name=self.validated_data['first_name'],
-            last_name=self.validated_data['last_name'],
             role=self.validated_data['role'],
             company=self.validated_data.get('company', ''),
         )
@@ -35,7 +31,7 @@ class CustomRegisterSerializer(RegisterSerializer):
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'email', 'first_name', 'last_name', 'role', 'company', 'password']
+        fields = ['id', 'email', 'role', 'company', 'password']
         extra_kwargs = {
             'password': {'write_only': True}, 
         }
