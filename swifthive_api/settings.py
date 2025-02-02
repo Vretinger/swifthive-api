@@ -10,13 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+from dotenv import load_dotenv
 from pathlib import Path
-import re
 import os
 import dj_database_url
 
-if os.path.exists('env.py'):
-    import env
+load_dotenv()
+
+DB_URL = os.getenv('DB_URL')
+
 
 CLOUDINARY_STORAGE = {
     'CLOUDINARY_URL': os.environ.get('CLOUDINARY_URL')
@@ -47,7 +49,7 @@ if 'DEV' in os.environ:
      }
 else:
     DATABASES = {
-        'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+        'default': dj_database_url.parse(os.environ.get("DB_URL"))
     }
     print("Connect")
     
@@ -82,7 +84,7 @@ ACCOUNT_USERNAME_REQUIRED = False
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = 'DEV' in os.environ
+DEBUG = os.getenv('DEBUG') == 'True'
 
 ALLOWED_HOSTS = [
     os.environ.get('ALLOWED_HOST'),
