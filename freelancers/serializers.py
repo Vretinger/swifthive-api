@@ -3,13 +3,14 @@ from .models import Freelancer
 
 
 class FreelanceSerializer(serializers.ModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.username')
-    is_owner = serializers.SerializerMethodField()
-
-    def get_is_owner(self, obj):
-        request = self.context['request']
-        return request.user == obj.owner
+    is_owner = serializers.SerializerMethodField() 
 
     class Meta:
         model = Freelancer
         fields = '__all__'
+
+    def get_is_owner(self, obj):
+        request = self.context.get('request') 
+        if request and request.user == obj.user:
+            return True
+        return False
