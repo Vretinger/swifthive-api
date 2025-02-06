@@ -11,7 +11,7 @@ class FreelanceList(APIView):
     def get(self, request):
         freelancers = Freelancer.objects.all() 
         serializers = FreelanceSerializer(
-            freelancers, many=True
+            freelancers, many=True, context={'request': request}  # Add context
         )
         return Response(serializers.data)
 
@@ -27,16 +27,17 @@ class FreelancerDetail(APIView):
     def get(self, request, pk):
         freelancer = self.get_object(pk)
         serializer = FreelanceSerializer(
-            freelancer
+            freelancer, context={'request': request}  # Add context
         )
         return Response(serializer.data)
 
     def put(self, request, pk):
         freelancer = self.get_object(pk)
         serializer = FreelanceSerializer(
-            freelancer, data=request.data, context={'request': request}
+            freelancer, data=request.data, context={'request': request}  # Context already exists here
         )
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
