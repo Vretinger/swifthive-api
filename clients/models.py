@@ -16,7 +16,7 @@ class Client(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, 
         on_delete=models.CASCADE, 
-        related_name='client_profile'
+        related_name='clients_client_profile'
     )
     name = models.CharField(max_length=255)
     company = models.CharField(max_length=255)

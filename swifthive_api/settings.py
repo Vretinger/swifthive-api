@@ -89,6 +89,7 @@ DEBUG = os.getenv('DEBUG')  == 'True'
 ALLOWED_HOSTS = [
     os.environ.get('ALLOWED_HOST'),
     'localhost',
+    '127.0.0.1',
 ]
 
 

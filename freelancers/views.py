@@ -11,26 +11,23 @@ class FreelanceList(APIView):
     def get(self, request):
         freelancers = Freelancer.objects.all() 
         serializers = FreelanceSerializer(
-            freelancers, many=True, context={'request': request}
+            freelancers, many=True
         )
         return Response(serializers.data)
 
 
 class FreelancerDetail(APIView):
-    serializer_class = FreelanceSerializer
-    permission_classes = [IsOwnerOrReadOnly]
-
     def get_object(self, pk):
         try:
-            self.check_object_permissions(self.request, Freelancer)
-            return Freelancer.objects.get(pk=pk)
+            freelancers = Freelancer.objects.get(pk=pk) 
+            return freelancers
         except Freelancer.DoesNotExist:
             raise Http404
 
     def get(self, request, pk):
         freelancer = self.get_object(pk)
         serializer = FreelanceSerializer(
-            freelancer, context={'request': request}
+            freelancer
         )
         return Response(serializer.data)
 

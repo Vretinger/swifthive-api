@@ -8,10 +8,10 @@ class Freelancer(models.Model):
         ('On Leave', 'On Leave'),
     ]
 
-    owner = models.OneToOneField(
-        settings.AUTH_USER_MODEL, 
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,  # Link to the user model defined in settings
         on_delete=models.CASCADE, 
-        related_name='freelancer_profile'
+        related_name='freelancer_profile'  # Adjusted related name for clarity
     )
     bio = models.TextField(blank=True, null=True)
     skills = models.ManyToManyField('Skill', blank=True)
@@ -30,8 +30,7 @@ class Freelancer(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.owner.email}'s Profile"
-
+        return f"{self.user.email}'s Profile"  # Adjusted to use 'user' attribute
 
 class Skill(models.Model):
     name = models.CharField(max_length=255, unique=True)

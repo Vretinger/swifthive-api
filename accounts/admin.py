@@ -1,7 +1,19 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .forms import CustomUserSignupForm
-from .models import CustomUser
+from .models import CustomUser, Freelancer, Client
+
+class FreelancerInline(admin.StackedInline):
+    model = Freelancer
+    can_delete = False
+    verbose_name_plural = 'Freelancer Profile'
+    fk_name = 'user'
+
+class ClientInline(admin.StackedInline):
+    model = Client
+    can_delete = False
+    verbose_name_plural = 'Client Profile'
+    fk_name = 'user'
 
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserSignupForm
@@ -20,5 +32,8 @@ class CustomUserAdmin(UserAdmin):
     )
     search_fields = ('email',)
     ordering = ('email',)
+
+    # Adding the inline models for Freelancer and Client profiles
+    inlines = [FreelancerInline, ClientInline]
 
 admin.site.register(CustomUser, CustomUserAdmin)
