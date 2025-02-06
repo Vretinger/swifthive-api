@@ -1,7 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .forms import CustomUserSignupForm
-from .models import CustomUser, Freelancer, Client
+from .models import CustomUser
+from freelancers.models import Freelancer  # Import from freelancers app
+from clients.models import Client  # Import from clients app
 
 class FreelancerInline(admin.StackedInline):
     model = Freelancer
@@ -27,13 +29,21 @@ class CustomUserAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'role', 'company', 'is_staff', 'is_active')}
+            'fields': ('email', 'password1', 'password2', 'role', 'is_staff', 'is_active')},
         ),
     )
     search_fields = ('email',)
     ordering = ('email',)
 
-    # Adding the inline models for Freelancer and Client profiles
-    inlines = [FreelancerInline, ClientInline]
+    # Only show the relevant inline based on user role
+    def get_inline_instances(self, request, obj=None):
+        if not obj:  # When creating a new user
+            return []
+        inlines = []
+        if obj.role == 'freelancer':
+            inlines.append(FreelancerInline(self.model, self.admin_site))
+        elif obj.role == 'client':
+            inlines.append(ClientInline(self.model, self.admin_site))
+        return inlines
 
 admin.site.register(CustomUser, CustomUserAdmin)
