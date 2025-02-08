@@ -97,7 +97,7 @@ class Company(models.Model):
     
 
 class Listing(models.Model):
-    Company = models.ForeignKey(Company, on_delete=models.CASCADE, default="null")
+    Company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=255)
     description = models.TextField()
     location = models.CharField(max_length=255)
