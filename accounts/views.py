@@ -5,6 +5,7 @@ from .serializers import FreelancerProfileSerializer, ClientProfileSerializer, C
 
 class CustomRegisterView(RegisterView):
     serializer_class = CustomRegisterSerializer
+    permission_classes = [permissions.AllowAny]
 
 class FreelancerListView(generics.ListAPIView):
     queryset = FreelancerProfile.objects.all()
