@@ -1,7 +1,5 @@
 from django.contrib.auth.backends import BaseBackend
-from accounts.models import CustomUser 
-from freelancers.models import Freelancer
-from clients.models import Client
+from accounts.models import CustomUser, FreelancerProfile, ClientProfile
 
 class EmailAuthenticationBackend(BaseBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
