@@ -1,8 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .models import Company  # Import the Company model from the client app
-from .models import CustomUser
-
+from .models import CustomUser, Listing, Company
 class CustomUserSignupForm(UserCreationForm):
     ROLE_CHOICES = [
         ('freelancer', 'Freelancer'),
@@ -18,3 +16,8 @@ class CustomUserSignupForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = ('email', 'first_name', 'last_name', 'role', 'company')
+
+class ListingForm(forms.ModelForm):
+    class Meta:
+        model = Listing
+        fields = ['title', 'description', 'location', 'is_active']
