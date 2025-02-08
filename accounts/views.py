@@ -1,6 +1,10 @@
 from rest_framework import generics, permissions
+from dj_rest_auth.registration.views import RegisterView
 from .models import FreelancerProfile, ClientProfile
-from .serializers import FreelancerProfileSerializer, ClientProfileSerializer
+from .serializers import FreelancerProfileSerializer, ClientProfileSerializer, CustomRegisterSerializer
+
+class CustomRegisterView(RegisterView):
+    serializer_class = CustomRegisterSerializer
 
 class FreelancerListView(generics.ListAPIView):
     queryset = FreelancerProfile.objects.all()
