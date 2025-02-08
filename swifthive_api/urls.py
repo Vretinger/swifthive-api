@@ -15,8 +15,6 @@ urlpatterns = [
     path('api/users/me/', CustomUserDetailsView.as_view(), name='user-details'),  # Current user's details
 
     # App-specific API routes
-    path('api/freelancers/', include('freelancers.urls')),  
-    path('api/clients/', include('clients.urls')),
     path('api/job-listings/', include('job_listings.urls')),  
     path('api/accounts/', include('accounts.urls')),  
 ]

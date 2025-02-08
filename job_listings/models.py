@@ -1,5 +1,5 @@
 from django.db import models
-from clients.models import Client
+from accounts.models import ClientProfile
 from django.contrib.auth.models import User
 from django.conf import settings
 

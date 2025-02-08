@@ -2,9 +2,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
+from django.shortcuts import get_object_or_404
 from rest_framework.filters import SearchFilter
 from django.http import HttpResponseForbidden
-from .models import JobListing, JobApplication, Client
+from .models import JobListing, JobApplication, ClientProfile
 from .serializers import JobListingSerializer
 from django_filters import rest_framework as filters
 
@@ -38,8 +39,8 @@ class JobListingCreate(APIView):
     def post(self, request):
         # Check if the user is a client
         try:
-            client = Client.objects.get(user=request.user)
-        except Client.DoesNotExist:
+            client = ClientProfile.objects.get(user=request.user)
+        except ClientProfile.DoesNotExist:
             return HttpResponseForbidden("Only clients can create job listings.")
         
         data = request.data

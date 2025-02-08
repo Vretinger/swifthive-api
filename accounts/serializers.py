@@ -1,6 +1,6 @@
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from rest_framework import serializers
-from .models import CustomUser
+from .models import CustomUser, FreelancerProfile, ClientProfile
 
 class CustomRegisterSerializer(RegisterSerializer):
     username = None  # Disable the 'username' field
@@ -31,7 +31,6 @@ class CustomRegisterSerializer(RegisterSerializer):
         user.save()
         return user
 
-
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
@@ -47,3 +46,17 @@ class CustomUserSerializer(serializers.ModelSerializer):
             user.set_password(password)
         user.save()
         return user
+    
+class FreelancerProfileSerializer(serializers.ModelSerializer):
+    user = CustomUserSerializer(read_only=True)
+
+    class Meta:
+        model = FreelancerProfile
+        fields = '__all__'
+
+class ClientProfileSerializer(serializers.ModelSerializer):
+    user = CustomUserSerializer(read_only=True)
+
+    class Meta:
+        model = ClientProfile
+        fields = '__all__'

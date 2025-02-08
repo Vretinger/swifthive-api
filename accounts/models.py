@@ -48,3 +48,61 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.email})"
+    
+
+class FreelancerProfile(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='freelancer_profile')
+    bio = models.TextField(blank=True, null=True)
+    skills = models.ManyToManyField('Skill', blank=True)
+    experience = models.TextField(blank=True, null=True)
+    portfolio_link = models.URLField(blank=True, null=True)
+    hourly_rate = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    location = models.CharField(max_length=255, blank=True, null=True)
+    availability_status = models.CharField(
+        max_length=20,
+        choices=[('Available', 'Available'), ('Busy', 'Busy'), ('On Leave', 'On Leave')],
+        default='Available'
+    )
+    profile_picture = models.ImageField(upload_to='freelancer_pics/', default='default_profile.png')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username} - Freelancer"
+
+class ClientProfile(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='client_profile')
+    company_name = models.CharField(max_length=255, blank=True, null=True)
+    website = models.URLField(blank=True, null=True)
+    location = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.user.username} - Client"
+
+class Skill(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+    
+class Company(models.Model):
+    name = models.CharField(max_length=255)
+    address = models.TextField()
+    description = models.TextField()
+    website = models.URLField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+    
+
+class Listing(models.Model):
+    ClientProfile = models.ForeignKey(ClientProfile, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    location = models.CharField(max_length=255)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title

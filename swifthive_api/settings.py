@@ -115,9 +115,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'corsheaders',
     
-
-    'freelancers',
-    'clients',
     'job_listings',
     'accounts',
 ]
