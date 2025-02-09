@@ -2,7 +2,7 @@ from rest_framework import generics, permissions
 from django.shortcuts import render, redirect
 from dj_rest_auth.registration.views import RegisterView
 from .models import FreelancerProfile, ClientProfile
-from .serializers import FreelancerProfileSerializer, ClientProfileSerializer, CustomRegisterSerializer
+from .serializers import FreelancerProfileSerializer, ClientProfileSerializer, CustomRegisterSerializer, ListingSerializer
 from django.contrib.auth.decorators import login_required
 from .models import Listing
 from .forms import ListingForm
@@ -30,6 +30,11 @@ class ClientDetailView(generics.RetrieveUpdateAPIView):
     queryset = ClientProfile.objects.all()
     serializer_class = ClientProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+class JobbListingView(generics.ListAPIView):
+    queryset = Listing.objects.all()
+    serializer_class = ListingSerializer
+    permission_classes = [permissions.AllowAny]    
 
 @login_required
 def create_listing(request):
