@@ -1,7 +1,8 @@
 from django.urls import path
-from .views import JobListingList, JobListingCreate
+from .views import CreateListingAPI, ListListingsAPI, EditDeleteListingAPI
 
 urlpatterns = [
-    path('', JobListingList.as_view(), name='job-listings-list'),
-    path('api/listings/create/', JobListingCreate.as_view(), name='create_job_listing'),
+    path("listings/", ListListingsAPI.as_view(), name="list_listings"),
+    path("listings/create/", CreateListingAPI.as_view(), name="create_listing"),
+    path("listings/<int:pk>/", EditDeleteListingAPI.as_view(), name="edit_delete_listing"),
 ]

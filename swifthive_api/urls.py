@@ -17,4 +17,5 @@ urlpatterns = [
     # App-specific API routes
     path('api/job-listings/', include('job_listings.urls')),  
     path('api/accounts/', include('accounts.urls')),  
+    path('api/applications/', include('applications.urls')),
 ]

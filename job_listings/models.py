@@ -1,26 +1,35 @@
 from django.db import models
-from accounts.models import ClientProfile
-from django.contrib.auth.models import User
-from django.conf import settings
+from django.utils.translation import gettext_lazy as _
+from accounts.models import Company
 
 
-class JobListing(models.Model):
+
+class Listing(models.Model):
+    CATEGORY_CHOICES = [
+        ("tech", "Tech"),
+        ("finance", "Finance"),
+        ("healthcare", "Healthcare"),
+        ("marketing", "Marketing"),
+        ("education", "Education"),
+        ("other", "Other"),
+    ]
+
+    Company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=255)
+    short_description = models.CharField(max_length=300, help_text="A short summary of the job")
     description = models.TextField()
-    company_name = models.CharField(max_length=255)
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default="other")
     location = models.CharField(max_length=255)
-    date_posted = models.DateTimeField(auto_now_add=True)
+    salary_range = models.CharField(max_length=100, blank=True, null=True, help_text="e.g. $50,000 - $70,000")
+    employment_type = models.CharField(
+        max_length=50,
+        choices=[("full-time", "Full Time"), ("part-time", "Part Time"), ("contract", "Contract")],
+        default="full-time",
+    )
+    remote = models.BooleanField(default=False)
+    application_deadline = models.DateField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.title
-
-
-class JobApplication(models.Model):
-    freelancer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    job_listing = models.ForeignKey(JobListing, on_delete=models.CASCADE)
-    date_applied = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('accepted', 'Accepted'), ('rejected', 'Rejected')], default='pending')
-
-    def __str__(self):
-        return f"{self.freelancer} applied for {self.job_listing}"
+        return f"{self.title} at {self.Company.name if self.Company else 'Unknown Company'}"

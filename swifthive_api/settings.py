@@ -117,6 +117,7 @@ INSTALLED_APPS = [
     
     'job_listings',
     'accounts',
+    'applications',
 ]
 SITE_ID = 1
 MIDDLEWARE = [

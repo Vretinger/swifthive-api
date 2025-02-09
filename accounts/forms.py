@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .models import CustomUser, Listing, Company
+from .models import CustomUser, Company
 class CustomUserSignupForm(UserCreationForm):
     ROLE_CHOICES = [
         ('freelancer', 'Freelancer'),
