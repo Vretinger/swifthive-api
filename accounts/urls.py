@@ -7,6 +7,6 @@ urlpatterns = [
     path('freelancers/<int:pk>/', FreelancerDetailView.as_view(), name='freelancer-detail'),
     path('clients/', ClientListView.as_view(), name='client-list'),
     path('clients/<int:pk>/', ClientDetailView.as_view(), name='client-detail'),
-    path('listing/', JobbListingView(), name='listing-detail'),
-    path('create_listing/', create_listing(), name='create_listing'),
+    path('listing/', JobbListingView.as_view(), name='listing-detail'),
+    path('create_listing/', create_listing.as_view(), name='create_listing'),
 ]
