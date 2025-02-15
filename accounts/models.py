@@ -54,6 +54,7 @@ class FreelancerProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='freelancer_profile')
     bio = models.TextField(blank=True, null=True)
     skills = models.ManyToManyField('Skill', blank=True)
+    custom_skills = models.TextField(blank=True, null=True)
     experience = models.TextField(blank=True, null=True)
     portfolio_link = models.URLField(blank=True, null=True)
     hourly_rate = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -69,6 +70,7 @@ class FreelancerProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - Freelancer"
+
 
 class ClientProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='client_profile')
