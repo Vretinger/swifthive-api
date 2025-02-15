@@ -1,9 +1,9 @@
-from rest_framework import generics, permissions
-from rest_framework import serializers
+from rest_framework import generics, permissions, serializers, status
+from rest_framework.exceptions import NotFound
 from .models import Listing
 from .serializers import ListingSerializer
 from rest_framework.response import Response
-from rest_framework import status
+
 
 # ✅ Create Job Listing (Only Clients)
 class CreateListingAPI(generics.CreateAPIView):
@@ -29,5 +29,15 @@ class EditDeleteListingAPI(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return Listing.objects.filter(Company=user.company, id=self.kwargs["pk"])
+        pk = self.kwargs.get("pk", "")
+
+        # Ensure that pk is a valid integer
+        if not pk or not pk.isdigit():
+            raise NotFound("Job listing not found.")
+
+        queryset = Listing.objects.filter(Company=user.company, id=int(pk))
+        if not queryset.exists():
+            raise NotFound("Job listing not found.")
+        
+        return queryset
 
