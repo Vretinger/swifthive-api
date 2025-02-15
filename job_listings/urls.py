@@ -1,8 +1,10 @@
 from django.urls import path
-from .views import CreateListingAPI, ListListingsAPI, EditDeleteListingAPI
+from .views import ListListingsAPI, ViewListingAPI, CreateListingAPI, EditDeleteListingAPI
 
 urlpatterns = [
-    path("listings/", ListListingsAPI.as_view(), name="list_listings"),
-    path("listings/create/", CreateListingAPI.as_view(), name="create_listing"),
-    path("listings/<int:pk>/", EditDeleteListingAPI.as_view(), name="edit_delete_listing"),
+    path('listings/', ListListingsAPI.as_view(), name='list-listings'),
+    path('listings/<int:pk>/', ViewListingAPI.as_view(), name='view-listing'),  # View job listing
+    path('listings/<int:pk>/edit/', EditDeleteListingAPI.as_view(), name='edit-listing'),
+    path('listings/<int:pk>/delete/', EditDeleteListingAPI.as_view(), name='delete-listing'),
+    path('create/', CreateListingAPI.as_view(), name='create-listing'),
 ]

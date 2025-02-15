@@ -22,6 +22,12 @@ class ListListingsAPI(generics.ListAPIView):
     serializer_class = ListingSerializer
     permission_classes = [permissions.AllowAny]
 
+# ✅ View Job Listing (Anyone Can View)
+class ViewListingAPI(generics.RetrieveAPIView):
+    queryset = Listing.objects.filter(is_active=True)
+    serializer_class = ListingSerializer
+    permission_classes = [permissions.AllowAny]  # Allow anyone to view
+
 # ✅ Edit & Delete Listings (Only Listing Owner)
 class EditDeleteListingAPI(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ListingSerializer
@@ -40,4 +46,3 @@ class EditDeleteListingAPI(generics.RetrieveUpdateDestroyAPIView):
             raise NotFound("Job listing not found.")
         
         return queryset
-
