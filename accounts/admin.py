@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .forms import CustomUserSignupForm
-from .models import CustomUser, FreelancerProfile, ClientProfile, Skill, Company, category
+from .models import CustomUser, FreelancerProfile, ClientProfile, Skill, Company, Category
 
 class FreelancerInline(admin.StackedInline):
     model = FreelancerProfile
@@ -36,6 +36,6 @@ class CustomUserAdmin(UserAdmin):
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(FreelancerProfile)
 admin.site.register(ClientProfile)
-admin.site.register(category)
+admin.site.register(Category)
 admin.site.register(Skill)
 admin.site.register(Company)
