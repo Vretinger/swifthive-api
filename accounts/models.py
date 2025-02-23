@@ -81,13 +81,19 @@ class ClientProfile(models.Model):
     def __str__(self):
         return f"{self.user.username} - Client"
 
-class Skill(models.Model):
-    Category = models.CharField(max_length=255, unique=True)
+class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
-    
 
     def __str__(self):
         return self.name
+
+class Skill(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return f"{self.name} ({self.category.name})"
+
     
 class Company(models.Model):
     name = models.CharField(max_length=255)
