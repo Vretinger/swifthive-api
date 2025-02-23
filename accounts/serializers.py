@@ -1,6 +1,6 @@
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from rest_framework import serializers
-from .models import CustomUser, FreelancerProfile, ClientProfile
+from .models import CustomUser, FreelancerProfile, ClientProfile, Skill, Category
 
 class CustomRegisterSerializer(RegisterSerializer):
     username = None  # Disable the 'username' field
@@ -60,3 +60,17 @@ class ClientProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClientProfile
         fields = '__all__'
+
+# Serializer for the Category model
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id', 'name']
+
+# Serializer for the Skill model
+class SkillSerializer(serializers.ModelSerializer):
+    category = CategorySerializer()  # Nested category data
+
+    class Meta:
+        model = Skill
+        fields = ['id', 'name', 'category']
