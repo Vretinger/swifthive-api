@@ -5,8 +5,6 @@ from .models import FreelancerProfile, ClientProfile, Skill
 from .serializers import FreelancerProfileSerializer, ClientProfileSerializer, CustomRegisterSerializer, SkillSerializer
 
 
-
-
 class CustomRegisterView(RegisterView):
     serializer_class = CustomRegisterSerializer
     permission_classes = [permissions.AllowAny]

@@ -32,9 +32,11 @@ class CustomRegisterSerializer(RegisterSerializer):
         return user
 
 class CustomUserSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(source='pk')
+    
     class Meta:
         model = CustomUser
-        fields = ['email', 'first_name', 'last_name', 'role', 'company', 'password']
+        fields = ['id','email', 'first_name', 'last_name', 'role', 'company', 'password']
         extra_kwargs = {
             'password': {'write_only': True}, 
         }
