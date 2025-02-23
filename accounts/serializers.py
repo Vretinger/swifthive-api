@@ -33,7 +33,7 @@ class CustomRegisterSerializer(RegisterSerializer):
 
 class CustomUserSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source='pk')
-    
+
     class Meta:
         model = CustomUser
         fields = ['id','email', 'first_name', 'last_name', 'role', 'company', 'password']
@@ -51,6 +51,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     
 class FreelancerProfileSerializer(serializers.ModelSerializer):
     user = CustomUserSerializer(read_only=True)
+    user_id = serializers.IntegerField(source='user.id', read_only=True)
 
     class Meta:
         model = FreelancerProfile
