@@ -4,8 +4,8 @@ from .views import FreelancerListView, FreelancerDetailView, ClientListView, Cli
 
 urlpatterns = [
     path('freelancers/', FreelancerListView.as_view(), name='freelancer-list'),
-    path('freelancers/<int:pk>/', FreelancerDetailView.as_view(), name='freelancer-detail'),
+    path('freelancers/<int:custom_user_id>/', FreelancerDetailView.as_view(), name='freelancer-detail'),
     path('clients/', ClientListView.as_view(), name='client-list'),
-    path('clients/<int:pk>/', ClientDetailView.as_view(), name='client-detail'),
+    path('clients/<int:custom_user_id>/', ClientDetailView.as_view(), name='client-detail'),
     path('skills/', SkillListView.as_view(), name='skill-list'),
 ]

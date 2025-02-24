@@ -15,9 +15,15 @@ class FreelancerListView(generics.ListAPIView):
     permission_classes = [permissions.AllowAny]
 
 class FreelancerDetailView(generics.RetrieveUpdateAPIView):
-    queryset = FreelancerProfile.objects.all()
     serializer_class = FreelancerProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        """
+        Override get_queryset to allow retrieving FreelancerProfile by user ID.
+        """
+        user_id = self.kwargs.get('custom_user_id')  # Capture user_id from URL
+        return FreelancerProfile.objects.filter(user_id=user_id)
 
 class ClientListView(generics.ListAPIView):
     queryset = ClientProfile.objects.all()
@@ -25,9 +31,15 @@ class ClientListView(generics.ListAPIView):
     permission_classes = [permissions.AllowAny]
 
 class ClientDetailView(generics.RetrieveUpdateAPIView):
-    queryset = ClientProfile.objects.all()
     serializer_class = ClientProfileSerializer
     permission_classes = [permissions.IsAuthenticated]  
+
+    def get_queryset(self):
+        """
+        Override get_queryset to allow retrieving ClientProfile by user ID.
+        """
+        user_id = self.kwargs.get('custom_user_id')  # Capture user_id from URL
+        return ClientProfile.objects.filter(user_id=user_id)
 
 class SkillListView(generics.ListAPIView):
     serializer_class = SkillSerializer
