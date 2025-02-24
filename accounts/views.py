@@ -17,13 +17,10 @@ class FreelancerListView(generics.ListAPIView):
 class FreelancerDetailView(generics.RetrieveUpdateAPIView):
     serializer_class = FreelancerProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
+    lookup_field = "user_id"  # Tell Django to use 'user_id' instead of 'pk'
 
     def get_queryset(self):
-        """
-        Override get_queryset to allow retrieving FreelancerProfile by user ID.
-        """
-        user_id = self.kwargs.get('custom_user_id')  # Capture user_id from URL
-        return FreelancerProfile.objects.filter(user_id=user_id)
+        return FreelancerProfile.objects.all()
 
 class ClientListView(generics.ListAPIView):
     queryset = ClientProfile.objects.all()
@@ -33,13 +30,10 @@ class ClientListView(generics.ListAPIView):
 class ClientDetailView(generics.RetrieveUpdateAPIView):
     serializer_class = ClientProfileSerializer
     permission_classes = [permissions.IsAuthenticated]  
+    lookup_field = "user_id"  # Tell Django to use 'user_id' instead of 'pk'
 
     def get_queryset(self):
-        """
-        Override get_queryset to allow retrieving ClientProfile by user ID.
-        """
-        user_id = self.kwargs.get('custom_user_id')  # Capture user_id from URL
-        return ClientProfile.objects.filter(user_id=user_id)
+        return ClientProfile.objects.all()
 
 class SkillListView(generics.ListAPIView):
     serializer_class = SkillSerializer
