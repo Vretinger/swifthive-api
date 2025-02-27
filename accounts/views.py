@@ -16,7 +16,7 @@ class FreelancerListView(generics.ListAPIView):
 
 class FreelancerDetailView(generics.RetrieveUpdateAPIView):
     serializer_class = FreelancerProfileSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     lookup_field = "user_id"  # Tell Django to use 'user_id' instead of 'pk'
 
     def get_queryset(self):
@@ -29,7 +29,7 @@ class ClientListView(generics.ListAPIView):
 
 class ClientDetailView(generics.RetrieveUpdateAPIView):
     serializer_class = ClientProfileSerializer
-    permission_classes = [permissions.IsAuthenticated]  
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]  
     lookup_field = "user_id"  # Tell Django to use 'user_id' instead of 'pk'
 
     def get_queryset(self):
