@@ -26,3 +26,16 @@ class ListUserApplicationsAPI(generics.ListAPIView):
 
     def get_queryset(self):
         return JobApplication.objects.filter(applicant=self.request.user)
+
+class ListJobApplicationsAPI(generics.ListAPIView):
+    serializer_class = JobApplicationSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        if not hasattr(user, "company"):
+            raise serializers.ValidationError({"error": "Only client accounts can view applications."})
+        
+        listing_id = self.kwargs.get("listing_id")
+        return JobApplication.objects.filter(listing__Company=user.company, listing_id=listing_id)
+
