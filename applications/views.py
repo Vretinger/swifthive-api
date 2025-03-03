@@ -39,3 +39,17 @@ class ListJobApplicationsAPI(generics.ListAPIView):
         listing_id = self.kwargs.get("listing_id")
         return JobApplication.objects.filter(listing__Company=user.company, listing_id=listing_id)
 
+
+class UpdateApplicationStatusAPI(generics.UpdateAPIView):
+    serializer_class = JobApplicationSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        if not hasattr(user, "company"):
+            raise serializers.ValidationError({"error": "Only client accounts can update applications."})
+        
+        return JobApplication.objects.filter(listing__Company=user.company)
+
+    def perform_update(self, serializer):
+        serializer.save()
