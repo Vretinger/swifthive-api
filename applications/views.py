@@ -19,3 +19,10 @@ class ApplyForJobAPI(generics.CreateAPIView):
             raise serializers.ValidationError({"error": "This job listing is no longer active."})
         
         serializer.save(applicant=user)
+
+class ListUserApplicationsAPI(generics.ListAPIView):
+    serializer_class = JobApplicationSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return JobApplication.objects.filter(applicant=self.request.user)
