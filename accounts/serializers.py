@@ -1,6 +1,6 @@
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from rest_framework import serializers
-from .models import CustomUser, FreelancerProfile, ClientProfile, Skill, Category
+from .models import CustomUser, FreelancerProfile, ClientProfile, Skill, Category, Company
 
 class CustomRegisterSerializer(RegisterSerializer):
     username = None  # Disable the 'username' field
@@ -19,20 +19,27 @@ class CustomRegisterSerializer(RegisterSerializer):
         return data
 
     def save(self, request):
-        # Collect the user data from the validated data and save the user
+        # Get or create Company instance if user is a client
+        company_instance = None
+        if self.validated_data['role'] == 'client' and self.validated_data.get('company'):
+            company_name = self.validated_data['company']
+            company_instance, _ = Company.objects.get_or_create(name=company_name)
+
         user = CustomUser.objects.create(
             email=self.validated_data['email'],
-            first_name = self.validated_data['first_name'],
-            last_name = self.validated_data['last_name'],
+            first_name=self.validated_data['first_name'],
+            last_name=self.validated_data['last_name'],
             role=self.validated_data['role'],
-            company=self.validated_data.get('company', ''),
+            company=company_instance
         )
-        user.set_password(self.validated_data['password1'])  # Set password
+
+        user.set_password(self.validated_data['password1'])
         user.save()
         return user
 
 class CustomUserSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source='pk')
+    company = serializers.StringRelatedField()
 
     class Meta:
         model = CustomUser
