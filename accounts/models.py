@@ -32,7 +32,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=150, blank=True)
     last_name = models.CharField(max_length=150, blank=True)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='freelancer')
-    company = models.CharField(max_length=255, blank=True, null=True)
+    company = models.ForeignKey('Company', on_delete=models.SET_NULL, null=True, blank=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
