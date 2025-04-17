@@ -5,6 +5,12 @@ class JobApplicationSerializer(serializers.ModelSerializer):
     listing_title = serializers.CharField(source="listing.title", read_only=True)
     company_name = serializers.CharField(source="listing.company.name", read_only=True)
 
+    
+    freelancer_id = serializers.IntegerField(source="applicant.id", read_only=True)
+
     class Meta:
         model = JobApplication
-        fields = ["id", "listing", "listing_title", "company_name", "status", "applied_at"]
+        fields = [
+            "id", "listing", "listing_title", "company_name", 
+            "status", "applied_at", "cover_letter", "resume"
+        ]
