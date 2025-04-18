@@ -2,7 +2,7 @@ from rest_framework import generics, permissions, serializers, status
 from .models import JobApplication
 from .serializers import JobApplicationSerializer
 from rest_framework.response import Response
-from accounts.models import Freelancer
+from accounts.models import FreelancerProfile
 from job_listings.models import Listing
 
 class ApplyForJobAPI(generics.CreateAPIView):
@@ -33,7 +33,7 @@ class ApplyForJobAPI(generics.CreateAPIView):
         resume = None
         if use_profile_resume and not uploaded_resume:
             try:
-                resume = user.freelancer.resume
+                resume = user.FreelancerProfile.resume
                 if not resume:
                     raise Exception("No resume found in profile.")
             except Exception:
