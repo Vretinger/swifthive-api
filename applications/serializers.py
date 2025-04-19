@@ -10,7 +10,4 @@ class JobApplicationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = JobApplication
-        fields = [
-            "id", "listing", "listing_title", "company_name", 
-            "status", "applied_at", "cover_letter", "resume"
-        ]
+        fields = '__all__'
