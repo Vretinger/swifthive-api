@@ -14,7 +14,7 @@ class CreateListingAPI(generics.CreateAPIView):
         user = self.request.user
         if not hasattr(user, "company"):
             raise serializers.ValidationError({"error": "Only client accounts can create listings."})
-        serializer.save(Company=user.company)
+        serializer.save(company=user.company)
 
 # ✅ List Job Listings (Anyone Can See)
 class ListListingsAPI(generics.ListAPIView):
@@ -41,7 +41,7 @@ class EditDeleteListingAPI(generics.RetrieveUpdateDestroyAPIView):
         if not pk or not pk.isdigit():
             raise NotFound("Job listing not found.")
 
-        queryset = Listing.objects.filter(Company=user.company, id=int(pk))
+        queryset = Listing.objects.filter(company=user.company, id=int(pk))
         if not queryset.exists():
             raise NotFound("Job listing not found.")
         
