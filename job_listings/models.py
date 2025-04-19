@@ -15,7 +15,7 @@ class Listing(models.Model):
         ("other", "Other"),
     ]
 
-    Company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=255)
     short_description = models.CharField(max_length=300, help_text="A short summary of the job")
     description = models.TextField()
@@ -42,4 +42,4 @@ class Listing(models.Model):
 
 
     def __str__(self):
-        return f"{self.title} at {self.Company.name if self.Company else 'Unknown Company'}"
+        return f"{self.title} at {self.company.name if self.company else 'Unknown Company'}"
