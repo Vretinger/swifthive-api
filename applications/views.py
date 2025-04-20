@@ -1,9 +1,97 @@
 from rest_framework import generics, permissions, serializers, status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
 from .models import JobApplication
 from .serializers import JobApplicationSerializer
-from rest_framework.response import Response
-from accounts.models import FreelancerProfile
+from accounts.models import FreelancerProfile, ClientProfile
 from job_listings.models import Listing
+from django.core.mail import send_mail
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def decline_application(request, job_id, freelancer_id):
+    reason = request.data.get("reason", "").strip()
+    if len(reason) > 300:
+        return Response({"error": "Reason too long."}, status=400)
+
+    freelancer = get_object_or_404(FreelancerProfile, user_id=freelancer_id)
+    application = get_object_or_404(JobApplication, listing_id=job_id, applicant_id=freelancer_id)
+
+    # Get client profile and company name
+    client_profile = get_object_or_404(ClientProfile, user_id=application.client.id)
+    company_name = client_profile.company_name if client_profile.company_name else "The SwiftHive Team"
+
+    # Email decline message
+    subject = "Your Application Update"
+    message = (
+        f"Hi {freelancer.user.first_name},\n\n"
+        "Thank you for your application. After reviewing all submissions, we've decided to move forward with other candidates.\n\n"
+        f"Reason: {reason if reason else 'No specific reason provided.'}\n\n"
+        "We truly appreciate your interest and wish you the best in your job search.\n\n"
+        f"Best regards,\n{company_name}\n"
+    )
+
+    try:
+        send_mail(
+            subject,
+            message,
+            "no-reply@swifthive.com",
+            [freelancer.user.email],
+            fail_silently=False,
+        )
+    except Exception as e:
+        return Response({"error": "Failed to send email.", "details": str(e)}, status=500)
+
+    # Update application status
+    application.status = "rejected"
+    application.save()
+
+    return Response({"message": "Decline email sent."}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def approve_application(request, job_id, freelancer_id):
+    interview_message = request.data.get("interview_message", "").strip()
+    if len(interview_message) > 500:
+        return Response({"error": "Interview message too long."}, status=400)
+
+    freelancer = get_object_or_404(FreelancerProfile, user_id=freelancer_id)
+    application = get_object_or_404(JobApplication, listing_id=job_id, applicant_id=freelancer_id)
+
+    # Get client profile and company name
+    client_profile = get_object_or_404(ClientProfile, user_id=application.client.id)
+    company_name = client_profile.company_name if client_profile.company_name else "The SwiftHive Team"
+
+    # Email approve message
+    subject = "Your Application Status - Interview Invitation"
+    message = (
+        f"Hi {freelancer.user.first_name},\n\n"
+        "We are excited to inform you that your application has been approved for the next step in the hiring process.\n\n"
+        "We would like to schedule an interview with you. Our team will reach out soon to arrange a time that works for you.\n\n"
+        f"Additional Message: {interview_message if interview_message else 'We look forward to speaking with you.'}\n\n"
+        "Best regards,\n"
+        f"{company_name}\n"
+    )
+
+    try:
+        send_mail(
+            subject,
+            message,
+            "no-reply@swifthive.com",
+            [freelancer.user.email],
+            fail_silently=False,
+        )
+    except Exception as e:
+        return Response({"error": "Failed to send email.", "details": str(e)}, status=500)
+
+    # Update application status to 'approved' for interview
+    application.status = "accepted"
+    application.save()
+
+    return Response({"message": "Interview invitation email sent."}, status=status.HTTP_200_OK)
 
 class ApplyForJobAPI(generics.CreateAPIView):
     serializer_class = JobApplicationSerializer
