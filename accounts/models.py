@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
+from cloudinary.models import CloudinaryField
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -64,7 +65,7 @@ class FreelancerProfile(models.Model):
         choices=[('Available', 'Available'), ('Busy', 'Busy'), ('On Leave', 'On Leave')],
         default='Available'
     )
-    profile_picture = models.ImageField(upload_to='freelancer_pics/', default='../default_profile_rnezic')
+    profile_picture = CloudinaryField('images/', default='../default_profile_rnezic')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
