@@ -64,7 +64,7 @@ class FreelancerProfile(models.Model):
         choices=[('Available', 'Available'), ('Busy', 'Busy'), ('On Leave', 'On Leave')],
         default='Available'
     )
-    profile_picture = models.ImageField(upload_to='freelancer_pics/', default='default_profile.png')
+    profile_picture = models.ImageField(upload_to='freelancer_pics/', default='../default_profile_rnezic')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
