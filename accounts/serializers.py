@@ -59,10 +59,31 @@ class CustomUserSerializer(serializers.ModelSerializer):
 class FreelancerProfileSerializer(serializers.ModelSerializer):
     user = CustomUserSerializer(read_only=True)
     user_id = serializers.IntegerField(source='user.id', read_only=True)
+    profile_picture = serializers.SerializerMethodField()
 
     class Meta:
         model = FreelancerProfile
-        fields = '__all__'
+        fields = [
+            'id',
+            'user',
+            'user_id',
+            'bio',
+            'custom_skills',
+            'experience',
+            'portfolio_link',
+            'hourly_rate',
+            'location',
+            'availability_status',
+            'profile_picture',
+            'created_at',
+            'updated_at',
+            'skills',
+        ]
+
+    def get_profile_picture(self, obj):
+        if obj.profile_picture:
+            return obj.profile_picture.url
+        return None
 
 class ClientProfileSerializer(serializers.ModelSerializer):
     user = CustomUserSerializer(read_only=True)
