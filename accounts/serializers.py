@@ -59,7 +59,8 @@ class CustomUserSerializer(serializers.ModelSerializer):
 class FreelancerProfileSerializer(serializers.ModelSerializer):
     user = CustomUserSerializer(read_only=True)
     user_id = serializers.IntegerField(source='user.id', read_only=True)
-    profile_picture = serializers.SerializerMethodField()
+    
+    profile_picture = serializers.ImageField(required=False, allow_null=True)
 
     class Meta:
         model = FreelancerProfile
