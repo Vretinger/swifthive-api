@@ -1,7 +1,8 @@
 from rest_framework import generics, permissions, serializers, status
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from django.core.mail import send_mail
+from django.core.exceptions import ValidationError
+from applications.send_email import send_email_via_brevo
 from .models import JobApplication
 from .serializers import JobApplicationSerializer
 from accounts.models import FreelancerProfile, ClientProfile
@@ -34,57 +35,49 @@ class UpdateApplicationStatusAPI(generics.UpdateAPIView):
 
     def send_approval_email(self, application):
         freelancer = application.applicant
-        client_user = application.listing.created_by  
+        client_user = application.listing.created_by
         client_profile = get_object_or_404(ClientProfile, user=client_user)
-        company_name = client_profile.company_name if client_profile.company_name else "The SwiftHive Team"
-
+        company_name = client_profile.company_name or "The SwiftHive Team"
 
         subject = "Your Application Status - Interview Invitation"
-        message = (
-            f"Hi {freelancer.first_name},\n\n"
-            "We are excited to inform you that your application has been approved for the next step in the hiring process.\n\n"
-            "We would like to schedule an interview with you. Our team will reach out soon to arrange a time that works for you.\n\n"
-            "Best regards,\n"
-            f"{company_name}\n"
+        html_content = (
+            f"<p>Hi {freelancer.first_name},</p>"
+            "<p>We are excited to inform you that your application has been approved for the next step in the hiring process.</p>"
+            "<p>We would like to schedule an interview with you. Our team will reach out soon to arrange a time that works for you.</p>"
+            f"<p>Best regards,<br>{company_name}</p>"
         )
 
         try:
-            send_mail(
-                subject,
-                message,
-                "no-reply@swifthive.com",
-                ["hampus.vretinger@hotmail.com"],
-                fail_silently=False,
-            )
-        except Exception as e:
-            raise serializers.ValidationError({"error": "Failed to send approval email.", "details": str(e)})
+            send_email_via_brevo(subject, html_content, freelancer.email)
+        except ValidationError as e:
+            raise serializers.ValidationError({
+                "error": "Failed to send approval email.",
+                "details": str(e)
+            })
 
     def send_decline_email(self, application):
         freelancer = application.applicant
-        client_user = application.listing.created_by 
+        client_user = application.listing.created_by
         client_profile = get_object_or_404(ClientProfile, user=client_user)
-        company_name = client_profile.company_name if client_profile.company_name else "The SwiftHive Team"
-        reason = application.status_change_reason if hasattr(application, "status_change_reason") else "No specific reason provided."
+        company_name = client_profile.company_name or "The SwiftHive Team"
+        reason = getattr(application, "status_change_reason", "No specific reason provided.")
 
         subject = "Your Application Update"
-        message = (
-            f"Hi {freelancer.first_name},\n\n"
-            "Thank you for your application. After reviewing all submissions, we've decided to move forward with other candidates.\n\n"
-            f"Reason: {reason}\n\n"
-            "We truly appreciate your interest and wish you the best in your job search.\n\n"
-            f"Best regards,\n{company_name}\n"
+        html_content = (
+            f"<p>Hi {freelancer.first_name},</p>"
+            "<p>Thank you for your application. After reviewing all submissions, we've decided to move forward with other candidates.</p>"
+            f"<p><strong>Reason:</strong> {reason}</p>"
+            "<p>We truly appreciate your interest and wish you the best in your job search.</p>"
+            f"<p>Best regards,<br>{company_name}</p>"
         )
 
         try:
-            send_mail(
-                subject,
-                message,
-                "no-reply@swifthive.com",
-                "hampus.vretinger@hotmail.com",
-                fail_silently=False,
-            )
-        except Exception as e:
-            raise serializers.ValidationError({"error": "Failed to send decline email.", "details": str(e)})
+            send_email_via_brevo(subject, html_content, freelancer.email)
+        except ValidationError as e:
+            raise serializers.ValidationError({
+                "error": "Failed to send decline email.",
+                "details": str(e)
+            })
 
 class ApplyForJobAPI(generics.CreateAPIView):
     serializer_class = JobApplicationSerializer

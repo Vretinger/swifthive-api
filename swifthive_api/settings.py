@@ -17,6 +17,10 @@ import dj_database_url
 
 load_dotenv()
 
+
+BREVO_API_KEY = os.getenv('BREVO_API_KEY')
+BREVO_EMAIL = os.getenv("BREVO_EMAIL")
+
 DB_URL = os.getenv('DB_URL')
 
 
@@ -154,16 +158,6 @@ AUTHENTICATION_BACKENDS = (
     'swifthive_api.authentication_backends.EmailAuthenticationBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
-
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp-relay.brevo.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER 
-
-
 
 ROOT_URLCONF = 'swifthive_api.urls'
 
