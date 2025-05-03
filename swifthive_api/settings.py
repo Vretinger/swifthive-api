@@ -118,7 +118,6 @@ INSTALLED_APPS = [
     'dj_rest_auth.registration',
     'django.contrib.sites',
     'corsheaders',
-    'anymail',
     
     'job_listings',
     'accounts',
