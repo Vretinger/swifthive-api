@@ -28,6 +28,20 @@ class ViewListingAPI(generics.RetrieveAPIView):
     serializer_class = ListingSerializer
     permission_classes = [permissions.AllowAny]  # Allow anyone to view
 
+# ✅ List Job Listings Created by the Logged-In Client
+class MyListingsAPI(generics.ListAPIView):
+    serializer_class = ListingSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        if not hasattr(user, "company"):
+            raise serializers.ValidationError({"error": "Only client accounts have listings."})
+        
+        # Return all listings by the logged-in client's company
+        return Listing.objects.filter(company=user.company)
+
+
 # ✅ Edit & Delete Listings (Only Listing Owner)
 class EditDeleteListingAPI(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ListingSerializer
