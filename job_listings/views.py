@@ -1,8 +1,7 @@
-from rest_framework import generics, permissions, serializers, status
+from rest_framework import generics, permissions, serializers
 from rest_framework.exceptions import NotFound
 from .models import Listing
 from .serializers import ListingSerializer
-from rest_framework.response import Response
 
 
 # ✅ Create Job Listing (Only Clients)
@@ -47,16 +46,13 @@ class EditDeleteListingAPI(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ListingSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
+    def get_object(self):
         user = self.request.user
-        pk = self.kwargs.get("pk", "")
+        listing_id = self.kwargs.get("pk")
 
-        # Ensure that pk is a valid integer
-        if not pk or not pk.isdigit():
-            raise NotFound("Job listing not found.")
+        try:
+            listing = Listing.objects.get(id=listing_id, company=user.company)
+        except Listing.DoesNotExist:
+            raise NotFound("Job listing not found or you do not have permission to edit it.")
 
-        queryset = Listing.objects.filter(company=user.company, id=int(pk))
-        if not queryset.exists():
-            raise NotFound("Job listing not found.")
-        
-        return queryset
+        return listing
