@@ -4,6 +4,7 @@ from .models import Listing
 
 class ListingSerializer(serializers.ModelSerializer):
     applicant_count = serializers.SerializerMethodField()
+    company = serializers.CharField(source="company.name", read_only=True)
 
     class Meta:
         model = Listing
