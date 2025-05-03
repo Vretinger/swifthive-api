@@ -34,8 +34,10 @@ class UpdateApplicationStatusAPI(generics.UpdateAPIView):
 
     def send_approval_email(self, application):
         freelancer = application.applicant
-        client_profile = get_object_or_404(ClientProfile, user_id=application.client.id)
+        client_user = application.listing.created_by  # ✅ Corrected reference
+        client_profile = get_object_or_404(ClientProfile, user=client_user)
         company_name = client_profile.company_name if client_profile.company_name else "The SwiftHive Team"
+
 
         subject = "Your Application Status - Interview Invitation"
         message = (
@@ -51,7 +53,7 @@ class UpdateApplicationStatusAPI(generics.UpdateAPIView):
                 subject,
                 message,
                 "no-reply@swifthive.com",
-                [freelancer.user.email],
+                "hampus.vretinger@hotmail.com",
                 fail_silently=False,
             )
         except Exception as e:
@@ -59,7 +61,8 @@ class UpdateApplicationStatusAPI(generics.UpdateAPIView):
 
     def send_decline_email(self, application):
         freelancer = application.applicant
-        client_profile = get_object_or_404(ClientProfile, user_id=application.client.id)
+        client_user = application.listing.created_by  # ✅ Corrected reference
+        client_profile = get_object_or_404(ClientProfile, user=client_user)
         company_name = client_profile.company_name if client_profile.company_name else "The SwiftHive Team"
         reason = application.status_change_reason if hasattr(application, "status_change_reason") else "No specific reason provided."
 
@@ -77,7 +80,7 @@ class UpdateApplicationStatusAPI(generics.UpdateAPIView):
                 subject,
                 message,
                 "no-reply@swifthive.com",
-                [freelancer.user.email],
+                "hampus.vretinger@hotmail.com",
                 fail_silently=False,
             )
         except Exception as e:
