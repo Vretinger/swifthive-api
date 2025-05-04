@@ -1,4 +1,5 @@
 from rest_framework import generics, permissions, serializers, status
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ValidationError
@@ -28,7 +29,7 @@ class UpdateApplicationStatusAPI(generics.UpdateAPIView):
         # Send email notification based on the new status
         if status == "accepted":
             self.send_approval_email(application)
-        elif status == "declined":
+        elif status == "rejected":
             self.send_decline_email(application)
         else:
             raise serializers.ValidationError({"error": "Invalid status for email notification."})
@@ -146,3 +147,17 @@ class ListJobApplicationsAPI(generics.ListAPIView):
         
         listing_id = self.kwargs.get("listing_id")
         return JobApplication.objects.filter(listing__company=user.company, listing_id=listing_id)
+    
+class HasAppliedAPI(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, listing_id):
+        user = request.user
+
+        # Optional: ensure user is a freelancer
+        if not hasattr(user, "FreelancerProfile"):
+            return Response({"error": "Only freelancer accounts can check application status."},
+                            status=status.HTTP_403_FORBIDDEN)
+
+        has_applied = JobApplication.objects.filter(applicant=user, listing_id=listing_id).exists()
+        return Response({"has_applied": has_applied})

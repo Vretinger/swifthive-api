@@ -3,7 +3,8 @@ from .views import (
     ApplyForJobAPI,
     ListUserApplicationsAPI,
     ListJobApplicationsAPI,
-    UpdateApplicationStatusAPI
+    UpdateApplicationStatusAPI,
+    HasAppliedAPI
 )
 
 urlpatterns = [
@@ -11,4 +12,5 @@ urlpatterns = [
     path("my/", ListUserApplicationsAPI.as_view(), name="my-applications"),
     path("list/<int:listing_id>/", ListJobApplicationsAPI.as_view(), name="job-applications"),
     path("update/<int:pk>/", UpdateApplicationStatusAPI.as_view(), name="update-application"),
+    path("has-applied/<int:listing_id>/", HasAppliedAPI.as_view(), name="has-applied"),
 ]
