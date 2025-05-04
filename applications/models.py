@@ -12,7 +12,7 @@ class JobApplication(models.Model):
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name='applications')
     applicant = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='job_applications')
     cover_letter = models.TextField(blank=True, null=True)
-    resume = models.FileField(upload_to='resumes/')
+    resume = models.URLField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     applied_at = models.DateTimeField(auto_now_add=True)
 
