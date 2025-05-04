@@ -154,10 +154,6 @@ class HasAppliedAPI(APIView):
     def get(self, request, listing_id):
         user = request.user
 
-        # Optional: ensure user is a freelancer
-        if not hasattr(user, "FreelancerProfile"):
-            return Response({"error": "Only freelancer accounts can check application status."},
-                            status=status.HTTP_403_FORBIDDEN)
-
+        # Remove freelancer-specific restriction
         has_applied = JobApplication.objects.filter(applicant=user, listing_id=listing_id).exists()
         return Response({"has_applied": has_applied})
