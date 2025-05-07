@@ -80,6 +80,7 @@ class UpdateApplicationStatusAPI(generics.UpdateAPIView):
                 "details": str(e)
             })
 
+
 class ApplyForJobAPI(generics.CreateAPIView):
     serializer_class = JobApplicationSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -97,22 +98,26 @@ class ApplyForJobAPI(generics.CreateAPIView):
         if not listing.is_active:
             return Response({"error": "This job listing is no longer active."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Check duplicate
+        # Check for duplicate applications
         if JobApplication.objects.filter(applicant=user, listing=listing).exists():
             return Response({"error": "You have already applied for this job."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Use resume from profile if needed
+        # Use resume from profile if requested
         if request.data.get("use_profile_resume", "false").lower() == "true":
             try:
                 resume_url = user.freelancerprofile.resume
                 if not resume_url:
                     raise Exception()
-                request.data._mutable = True  # Only if QueryDict is immutable
-                request.data["resume"] = resume_url  # serializer will treat this as URL
+                request.data._mutable = True  # If needed in older versions of DRF
+                request.data["resume"] = resume_url
             except:
                 return Response({"error": "Resume not found in profile."}, status=status.HTTP_400_BAD_REQUEST)
 
         return super().create(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        # Set applicant manually
+        serializer.save(applicant=self.request.user)
 
 
 class ListUserApplicationsAPI(generics.ListAPIView):
