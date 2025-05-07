@@ -34,7 +34,12 @@ class JobApplicationSerializer(serializers.ModelSerializer):
         resume_file = validated_data.pop('resume')
 
         # Upload to Cloudinary
-        result = upload(resume_file, resource_type="auto", folder="resumes")
+        result = upload(
+            resume_file,
+            resource_type="auto",
+            folder="resumes",
+            type="upload" 
+        )
         resume_url = result.get("secure_url")
 
         # Set resume URL in the model
