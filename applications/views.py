@@ -116,8 +116,10 @@ class ApplyForJobAPI(generics.CreateAPIView):
         return super().create(request, *args, **kwargs)
 
     def perform_create(self, serializer):
-        # Set applicant manually
-        serializer.save(applicant=self.request.user)
+        listing_id = self.request.data.get("listing")
+        listing = Listing.objects.get(id=listing_id)
+        serializer.save(applicant=self.request.user, listing=listing)
+
 
 
 class ListUserApplicationsAPI(generics.ListAPIView):
